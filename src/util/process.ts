@@ -9,7 +9,7 @@ import { FeatureLike } from 'ol/Feature';
 
 export const processData = (buffer: DataFormat[]) => {
   const pointFeatures = buffer.map(elem => {
-    const feature = new Feature(new Circle(fromLonLat([elem.longitude, elem.latitude]), 3));
+    const feature = new Feature(new Circle(fromLonLat([elem.longitude, elem.latitude]), 7));
     feature.set('passenger', elem.num_passenger.toString());
     return feature;
   });
@@ -26,14 +26,14 @@ export const processData = (buffer: DataFormat[]) => {
         }),
         stroke: new Stroke({
           color: '#49A8DE',
-          width: 2,
+          width: 3,
         }),
         text: new Text({
           stroke: new Stroke({
             color: '#b7b7b7',
             width: 1,
           }),
-          font: '10px/1 sans-serif',
+          font: '14px/1 sans-serif',
           text: label,
         }),
       });

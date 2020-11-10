@@ -78554,7 +78554,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var processData = function processData(buffer) {
   var pointFeatures = buffer.map(function (elem) {
-    var feature = new ol_Feature__WEBPACK_IMPORTED_MODULE_0__["default"](new ol_geom_Circle__WEBPACK_IMPORTED_MODULE_1__["default"](Object(ol_proj__WEBPACK_IMPORTED_MODULE_2__["fromLonLat"])([elem.longitude, elem.latitude]), 3));
+    var feature = new ol_Feature__WEBPACK_IMPORTED_MODULE_0__["default"](new ol_geom_Circle__WEBPACK_IMPORTED_MODULE_1__["default"](Object(ol_proj__WEBPACK_IMPORTED_MODULE_2__["fromLonLat"])([elem.longitude, elem.latitude]), 7));
     feature.set('passenger', elem.num_passenger.toString());
     return feature;
   });
@@ -78570,14 +78570,14 @@ var processData = function processData(buffer) {
         }),
         stroke: new ol_style__WEBPACK_IMPORTED_MODULE_5__["Stroke"]({
           color: '#49A8DE',
-          width: 2
+          width: 3
         }),
         text: new ol_style__WEBPACK_IMPORTED_MODULE_5__["Text"]({
           stroke: new ol_style__WEBPACK_IMPORTED_MODULE_5__["Stroke"]({
             color: '#b7b7b7',
             width: 1
           }),
-          font: '10px/1 sans-serif',
+          font: '14px/1 sans-serif',
           text: label
         })
       });
