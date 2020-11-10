@@ -8,17 +8,29 @@ import { fromLonLat } from 'ol/proj';
 import { defaults, DragPan, MouseWheelZoom } from 'ol/interaction';
 import { platformModifierKeyOnly } from 'ol/events/condition';
 import { nanoid } from 'nanoid';
-import { processData } from './util/process';
+import { processData, drawFeature } from './util/process';
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
 import 'ol/ol.css';
+import './css/main.css';
 
 interface Props extends PanelProps<PanelOptions> {}
-interface State {}
+interface State {
+  options: string[];
+  current: string;
+}
 
 export class MainPanel extends PureComponent<Props, State> {
   id = 'id' + nanoid();
   map: Map;
   randomTile: TileLayer;
-  pointLayer: VectorLayer;
+  infoLayer: VectorLayer;
+  perID: { [key: string]: Array<{ coordinate: number[]; label: string }> };
+
+  state = {
+    options: [],
+    current: 'None',
+  };
 
   componentDidMount() {
     const { tile_url, zoom_level, center_lon, center_lat } = this.props.options;
@@ -70,18 +82,19 @@ export class MainPanel extends PureComponent<Props, State> {
     if (this.props.data.series.length > 0) {
       const { buffer } = this.props.data.series[0].fields[0].values as Buffer;
 
-      this.pointLayer = processData(buffer);
-      this.map.addLayer(this.pointLayer);
+      this.perID = processData(buffer);
+      this.setState({ options: ['None', ...Object.keys(this.perID)] });
     }
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: Props, prevState: State) {
     if (prevProps.data.series !== this.props.data.series) {
+      this.map.removeLayer(this.infoLayer);
       if (this.props.data.series.length == 0) {
+        this.setState({ options: [], current: 'None' });
         return;
       }
 
-      this.map.removeLayer(this.pointLayer);
       const { buffer } = this.props.data.series[0].fields[0].values as Buffer;
 
       if (prevProps.data.series.length == 0) {
@@ -91,8 +104,10 @@ export class MainPanel extends PureComponent<Props, State> {
         });
       }
 
-      this.pointLayer = processData(buffer);
-      this.map.addLayer(this.pointLayer);
+      this.perID = processData(buffer);
+      this.setState({ options: ['None', ...Object.keys(this.perID)], current: 'None' });
+      // this.pointLayer = processData(buffer);
+      // this.map.addLayer(this.pointLayer);
     }
 
     if (prevProps.options.tile_url !== this.props.options.tile_url) {
@@ -123,11 +138,29 @@ export class MainPanel extends PureComponent<Props, State> {
         duration: 2000,
       });
     }
+
+    if (prevState.current !== this.state.current) {
+      this.map.removeLayer(this.infoLayer);
+      if (this.state.current == 'None') return;
+
+      this.infoLayer = drawFeature(this.perID[this.state.current]);
+      this.map.addLayer(this.infoLayer);
+    }
   }
+
+  onSelect = (option: { value: string; label: React.ReactNode }) => {
+    this.setState({ current: option.value });
+  };
 
   render() {
     const { width, height } = this.props;
+    const { options, current } = this.state;
 
-    return <div id={this.id} style={{ width, height }}></div>;
+    return (
+      <div style={{ width, height }}>
+        <Dropdown className="custom-dropdown" options={options} onChange={this.onSelect} value={current} />
+        <div id={this.id} style={{ width, height: height - 40 }}></div>;
+      </div>
+    );
   }
 }
