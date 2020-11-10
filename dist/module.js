@@ -79097,77 +79097,7 @@ var processData = function processData(buffer) {
       });
     }
   });
-  return perID; //   const pointFeatures: Feature[] = [];
-  //   const linestring: number[][] = [];
-  //   buffer.map(elem => {
-  //     const feature = new Feature(new Point([elem.longitude, elem.latitude]).transform('EPSG:4326', 'EPSG:3857'));
-  //     feature.set('passenger', elem.num_passenger.toString());
-  //     pointFeatures.push(feature);
-  //     linestring.push([elem.longitude, elem.latitude]);
-  //   });
-  //   const lineFeature = new Feature<LineString>(new LineString(linestring).transform('EPSG:4326', 'EPSG:3857'));
-  //   pointFeatures.push(lineFeature);
-  //   return new VectorLayer({
-  //     source: new VectorSource({
-  //       features: [...pointFeatures],
-  //     }),
-  //     style: function(feature: FeatureLike) {
-  //       const geo_type = feature.getGeometry()?.getType();
-  //       if (geo_type == GeometryType.LINE_STRING) {
-  //         const geometry = feature.getGeometry() as LineString;
-  //         const line_styles = [
-  //           new Style({
-  //             stroke: new Stroke({
-  //               color: '#49A8DE',
-  //               width: 2,
-  //             }),
-  //           }),
-  //         ];
-  //         geometry.forEachSegment(function(start, end) {
-  //           const dx = end[0] - start[0];
-  //           const dy = end[1] - start[1];
-  //           const rotation = Math.atan2(dy, dx);
-  //           line_styles.push(
-  //             new Style({
-  //               geometry: new Point(end),
-  //               image: new Icon({
-  //                 src: Arrow,
-  //                 anchor: [0.75, 0.5],
-  //                 rotateWithView: true,
-  //                 rotation: -rotation,
-  //               }),
-  //             })
-  //           );
-  //         });
-  //         return line_styles;
-  //       }
-  //       if (geo_type == GeometryType.POINT) {
-  //         const label = feature.get('passenger');
-  //         return new Style({
-  //           text: new Text({
-  //             stroke: new Stroke({
-  //               color: '#b7b7b7',
-  //               width: 1,
-  //             }),
-  //             font: '12px/1 sans-serif',
-  //             text: label,
-  //           }),
-  //           image: new CircleStyle({
-  //             radius: 9,
-  //             fill: new Fill({
-  //               color: 'rgba(255, 255, 255, 0.2)',
-  //             }),
-  //             stroke: new Stroke({
-  //               color: 'rgba(73,168,222,0.5)',
-  //               width: 2,
-  //             }),
-  //           }),
-  //         });
-  //       }
-  //       return new Style();
-  //     },
-  //     zIndex: 2,
-  //   });
+  return perID;
 };
 var drawFeature = function drawFeature(data) {
   var totalFeatures = [];
@@ -79201,8 +79131,10 @@ var drawFeature = function drawFeature(data) {
           var dx = end[0] - start[0];
           var dy = end[1] - start[1];
           var rotation = Math.atan2(dy, dx);
+          var midX = (start[0] + end[0]) / 2;
+          var midY = (start[1] + end[1]) / 2;
           line_styles_1.push(new ol_style__WEBPACK_IMPORTED_MODULE_6__["Style"]({
-            geometry: new ol_geom_Point__WEBPACK_IMPORTED_MODULE_2__["default"](end),
+            geometry: new ol_geom_Point__WEBPACK_IMPORTED_MODULE_2__["default"]([midX, midY]),
             image: new ol_style__WEBPACK_IMPORTED_MODULE_6__["Icon"]({
               src: _img_arrow_png__WEBPACK_IMPORTED_MODULE_8___default.a,
               anchor: [0.75, 0.5],
@@ -79228,7 +79160,7 @@ var drawFeature = function drawFeature(data) {
           image: new ol_style__WEBPACK_IMPORTED_MODULE_6__["Circle"]({
             radius: 9,
             fill: new ol_style__WEBPACK_IMPORTED_MODULE_6__["Fill"]({
-              color: 'rgba(255, 255, 255, 0.2)'
+              color: 'rgba(255, 255, 255, 0.9)'
             }),
             stroke: new ol_style__WEBPACK_IMPORTED_MODULE_6__["Stroke"]({
               color: 'rgba(73,168,222,0.5)',
