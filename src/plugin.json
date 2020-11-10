@@ -1,0 +1,21 @@
+{
+  "type": "panel",
+  "name": "ES Bus Map",
+  "id": "id-es-bus-map-gps",
+  "dataFormats": ["table"],
+  "info": {
+    "description": "ES Bus",
+    "author": {
+      "name": "Nam Le"
+    },
+    "keywords": [],
+    "screenshots": [],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+
+  "dependencies": {
+    "grafanaVersion": "6.3.x",
+    "plugins": []
+  }
+}
