@@ -78928,9 +78928,9 @@ function (_super) {
       this.map.removeLayer(this.infoLayer);
       if (this.state.current == 'None') return;
       var busLine = this.perID[this.state.current];
-      var middlePoint = busLine[Math.floor(busLine.length / 2)];
+      var newCenter = busLine[busLine.length - 1];
       this.map.getView().animate({
-        center: Object(ol_proj__WEBPACK_IMPORTED_MODULE_5__["fromLonLat"])(middlePoint.coordinate),
+        center: Object(ol_proj__WEBPACK_IMPORTED_MODULE_5__["fromLonLat"])(newCenter.coordinate),
         duration: 2000
       });
       this.infoLayer = Object(_util_process__WEBPACK_IMPORTED_MODULE_9__["drawFeature"])(this.perID[this.state.current]);

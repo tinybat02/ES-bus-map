@@ -142,10 +142,10 @@ export class MainPanel extends PureComponent<Props, State> {
       if (this.state.current == 'None') return;
 
       const busLine = this.perID[this.state.current];
-      const middlePoint = busLine[Math.floor(busLine.length / 2)];
+      const newCenter = busLine[busLine.length - 1];
 
       this.map.getView().animate({
-        center: fromLonLat(middlePoint.coordinate),
+        center: fromLonLat(newCenter.coordinate),
         duration: 2000,
       });
 
