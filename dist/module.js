@@ -78894,8 +78894,7 @@ function (_super) {
       this.setState({
         options: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"])(['None'], Object.keys(this.perID)),
         current: 'None'
-      }); // this.pointLayer = processData(buffer);
-      // this.map.addLayer(this.pointLayer);
+      });
     }
 
     if (prevProps.options.tile_url !== this.props.options.tile_url) {
@@ -78928,6 +78927,12 @@ function (_super) {
     if (prevState.current !== this.state.current) {
       this.map.removeLayer(this.infoLayer);
       if (this.state.current == 'None') return;
+      var busLine = this.perID[this.state.current];
+      var middlePoint = busLine[Math.floor(busLine.length / 2)];
+      this.map.getView().animate({
+        center: Object(ol_proj__WEBPACK_IMPORTED_MODULE_5__["fromLonLat"])(middlePoint.coordinate),
+        duration: 2000
+      });
       this.infoLayer = Object(_util_process__WEBPACK_IMPORTED_MODULE_9__["drawFeature"])(this.perID[this.state.current]);
       this.map.addLayer(this.infoLayer);
     }
@@ -79108,6 +79113,7 @@ var drawFeature = function drawFeature(data) {
     totalFeatures.push(feature);
     linestring.push(item.coordinate);
   });
+  totalFeatures[totalFeatures.length - 1].set('isLastest', 'true');
   var lineFeature = new ol_Feature__WEBPACK_IMPORTED_MODULE_1__["default"](new ol_geom_LineString__WEBPACK_IMPORTED_MODULE_3__["default"](linestring).transform('EPSG:4326', 'EPSG:3857'));
   totalFeatures.push(lineFeature);
   return new ol_layer__WEBPACK_IMPORTED_MODULE_5__["Vector"]({
@@ -79148,6 +79154,9 @@ var drawFeature = function drawFeature(data) {
 
       if (geo_type == ol_geom_GeometryType__WEBPACK_IMPORTED_MODULE_7__["default"].POINT) {
         var label = feature.get('passenger');
+        var isLastest = feature.get('isLastest');
+        var color = 'rgba(73,168,222,0.5)';
+        if (isLastest) color = '#ef5319';
         return new ol_style__WEBPACK_IMPORTED_MODULE_6__["Style"]({
           text: new ol_style__WEBPACK_IMPORTED_MODULE_6__["Text"]({
             stroke: new ol_style__WEBPACK_IMPORTED_MODULE_6__["Stroke"]({
@@ -79163,7 +79172,7 @@ var drawFeature = function drawFeature(data) {
               color: 'rgba(255, 255, 255, 0.9)'
             }),
             stroke: new ol_style__WEBPACK_IMPORTED_MODULE_6__["Stroke"]({
-              color: 'rgba(73,168,222,0.5)',
+              color: color,
               width: 2
             })
           })

@@ -33,9 +33,11 @@ export const drawFeature = (data: Array<{ coordinate: number[]; label: string }>
     const feature = new Feature(new Point(item.coordinate).transform('EPSG:4326', 'EPSG:3857'));
     feature.set('passenger', item.label.toString());
     totalFeatures.push(feature);
+
     linestring.push(item.coordinate);
   });
 
+  totalFeatures[totalFeatures.length - 1].set('isLastest', 'true');
   const lineFeature = new Feature<LineString>(new LineString(linestring).transform('EPSG:4326', 'EPSG:3857'));
 
   totalFeatures.push(lineFeature);
@@ -82,6 +84,9 @@ export const drawFeature = (data: Array<{ coordinate: number[]; label: string }>
 
       if (geo_type == GeometryType.POINT) {
         const label = feature.get('passenger');
+        const isLastest = feature.get('isLastest');
+        let color = 'rgba(73,168,222,0.5)';
+        if (isLastest) color = '#ef5319';
         return new Style({
           text: new Text({
             stroke: new Stroke({
@@ -97,7 +102,7 @@ export const drawFeature = (data: Array<{ coordinate: number[]; label: string }>
               color: 'rgba(255, 255, 255, 0.9)',
             }),
             stroke: new Stroke({
-              color: 'rgba(73,168,222,0.5)',
+              color: color,
               width: 2,
             }),
           }),

@@ -106,8 +106,6 @@ export class MainPanel extends PureComponent<Props, State> {
 
       this.perID = processData(buffer);
       this.setState({ options: ['None', ...Object.keys(this.perID)], current: 'None' });
-      // this.pointLayer = processData(buffer);
-      // this.map.addLayer(this.pointLayer);
     }
 
     if (prevProps.options.tile_url !== this.props.options.tile_url) {
@@ -142,6 +140,14 @@ export class MainPanel extends PureComponent<Props, State> {
     if (prevState.current !== this.state.current) {
       this.map.removeLayer(this.infoLayer);
       if (this.state.current == 'None') return;
+
+      const busLine = this.perID[this.state.current];
+      const middlePoint = busLine[Math.floor(busLine.length / 2)];
+
+      this.map.getView().animate({
+        center: fromLonLat(middlePoint.coordinate),
+        duration: 2000,
+      });
 
       this.infoLayer = drawFeature(this.perID[this.state.current]);
       this.map.addLayer(this.infoLayer);
